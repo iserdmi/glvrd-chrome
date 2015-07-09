@@ -1,7 +1,6 @@
 .DS_Store
-extension/
+**/key.pem
 extension.zip
-glvrd-chrome.zip
-extension.pem
-glvrd-chrome.pem
-extension.crx
+dist/
+node_modules/
+!**/.keep
