@@ -1,0 +1,40 @@
+body {
+  padding: 0px !important;
+  color: #000 !important;
+}
+font {
+  color: #000 !important;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+.processing {
+  color: #443333 !important;
+}
+em {
+  color: #dA570f !important;
+  font-style: normal;
+  --display: inline-block;
+  background: url(../images/underline.svg) 0 100% repeat-x;
+  border-radius: .2em;
+  padding: 3px 2px;
+  margin: 0 -2px;
+  transition: background-color .25s, color .25s;
+  -webkit-transition: background-color .25s, color .25s;
+}
+em.active {
+  background: #DA570F !important;
+  color: #fff !important;
+  transition: background-color 0, color 0;
+  -webkit-transition: background-color 0, color 0;  
+}
+em.also {
+  background: #fdc !important;
+  transition: background-color .25s, color .25s;
+  -webkit-transition: background-color .25s, color .25s;
+}
+i {
+  font-size: 0;
+  line-height: 0;
+}

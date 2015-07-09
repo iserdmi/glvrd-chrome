@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Главред</title>
+    <link rel="stylesheet" href="styles/popup.css">
+    <script src="vendors/jquery-2.1.4.min.js"></script>
+    <script src="vendors/wysihtml5-0.3.0.js"></script>
+    <script src="scripts/popup.js"></script>
+  </head>
+  <body class="status-waiting">
+    <div class="text">
+      <div id="textarea_wrap">
+        <textarea id="textarea"></textarea>
+      </div>      
+    </div>  
+    <div id="info">
+      <div class="welcome">
+        <div class="hidden_wrapper">
+          <div class="wrapper">
+            <p class="task">Вставьте текст на&nbsp;русском языке. Или&nbsp;выделите нужный текст и&nbsp;снова откройте это&nbsp;окно. Текст сам появится в&nbsp;нужном месте.</p>
+            <p class="copyright"><a href="http://glvrd.ru" target="_blank">Главред</a> создали <a href="http://maximilyahov.ru/" target="_blank">Максим&nbsp;Ильяхов</a> и&nbsp;<a href="http://anatolyburov.ru/" target="_blank">Анатолий&nbsp;Буров</a>. Расширение написал <a href="http://serdmi.ru/" target="_blank">Сергей&nbsp;Дмитриев</a>.</p>
+          </div>          
+        </div>
+        <img class="arrow" src="images/arrow.png" srcset="images/arrow@2x.png 2x" height="135" width="79" alt="">
+      </div>
+      <div class="rule">
+        <div class="wrapper">
+          <h3 class="title"></h3>
+          <p class="description"></p>
+        </div>
+      </div>
+      <div class="error">
+        <div class="wrapper">
+          <h3 class="title">Всё плохо</h3>
+          <p class="description">Уходите</p>
+        </div>
+      </div>
+      <div class="stats processing">
+        <div class="wrapper">
+          <div class="stats-score-div">
+            <span class="stats-score">?</span>
+            <span class="stats-score-suffix">баллов</span> из 10
+            <br />
+            по шкале Главреда
+          </div>
+          <div class="stats-text-div">
+            <span class="stats-sentences">0</span>
+            <span class="stats-sentences-suffix">предложений</span>
+            <br />
+            <span class="stats-words">0</span>
+            <span class="stats-words-suffix">слов</span>,
+            <span class="stats-chars">0</span>
+            <span class="stats-chars-suffix">знаков</span>
+          </div>
+          <div class="stats-result-div">
+            <span class="stats-stopwords">?</span>
+            <span class="stats-stopwords-suffix">стоп-слов</span><br>
+            <span><a class="send_to_glvrd" href="http://glvrd.ru" target="_blank">Отправить в Главред</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
