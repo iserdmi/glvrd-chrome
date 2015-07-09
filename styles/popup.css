@@ -1,5 +1,5 @@
 body, html {
-  
+  max-height: 9999px; 
 }
 body {
   width: 700px;
@@ -8,6 +8,7 @@ body {
   font-family: "Helvetica Neue", Arial, sans-serif;
   font-size: 11pt;
   line-height: 18pt;
+  position: relative;
 }
 #info {
   background: #f7f7f7;
@@ -22,6 +23,8 @@ body {
   background: #fff;
   overflow: hidden;
   height: 191px;
+}
+.text.animated {
   transition: height 0.2s;
   -webkit-transition: height 0.2s;
 }
@@ -97,13 +100,6 @@ a:hover {
   line-height: 1.4em;
   position: relative;
 }
-#info .welcome .arrow {
-  position: absolute;
-  bottom: 76px;
-  z-index: 888;
-  left: 106px;
-  pointer-events: none;
-}
 #info .welcome .wrapper {
   padding-top: 1.8em;
 }
@@ -152,7 +148,6 @@ a:hover {
 }
 #info .rule,
 #info .welcome,
-#info .welcome .hidden_wrapper,
 #info .stats,
 #info .error {
   overflow: hidden;
@@ -161,12 +156,8 @@ a:hover {
   transition: height 0s linear 0.2s, opacity 0.2s ease;
   -webkit-transition: height 0s linear 0.2s, opacity 0.2s ease;
 }
-#info .welcome {
-  overflow: visible;
-}
 body.status-rule #info .rule,
 body.status-welcome #info .welcome,
-body.status-welcome #info .welcome .hidden_wrapper,
 body.status-error #info .error,
 body.status-stats #info .stats {
   height: 90px;
@@ -182,4 +173,21 @@ body.status-waiting:before {
   top: 0;
   left: 0;
   position: absolute;
+}
+#arrow {
+  position: absolute;
+  bottom: 76px;
+  z-index: 888;
+  left: 106px;
+  pointer-events: none;
+  opacity: 0;
+  margin-left: -9999px;
+  transition: height 0s linear 0.2s, opacity 0.2s ease;
+  -webkit-transition: height 0s linear 0.2s, opacity 0.2s ease;
+}
+body.status-welcome #arrow {
+  margin-left: 0;
+  opacity: 1;
+  transition: margin-left 0s linear 0.2s, opacity 0.2s linear 0.2s;
+  -webkit-transition: margin-left 0s linear 0.2s, opacity 0.2s linear 0.2s;
 }

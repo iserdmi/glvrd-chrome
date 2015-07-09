@@ -353,6 +353,9 @@ $(function() {
           update_text_stats();
           setTimeout(function() {
             resize_textarea();
+            setTimeout(function() {
+              $text.removeClass('animated');
+            }, 500);
           }, 100);          
           check_text();
           update_status();          
@@ -361,7 +364,7 @@ $(function() {
     });
 
     $editor_body
-      .on('keyup', function(event) {
+      .on('keyup keypress', function(event) {
         if (event.keyCode < 37 || event.keyCode > 40) {
           set_last_text();
           user_activity();
