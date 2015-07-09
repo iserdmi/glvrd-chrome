@@ -1,5 +1,5 @@
 # Расширение для гугл хрома «Главред»
-[**Скачать расширение**](https://chrome.google.com/webstore/detail/%D0%B3%D0%BB%D0%B0%D0%B2%D1%80%D0%B5%D0%B4/cemggbdceohakijlpdoipmmilickggjm)
+[**Установить расширение**](https://chrome.google.com/webstore/detail/%D0%B3%D0%BB%D0%B0%D0%B2%D1%80%D0%B5%D0%B4/cemggbdceohakijlpdoipmmilickggjm)
 
 Главред помогает очистить текст от словесного мусора, проверяет на соответствие информационному стилю. Расширение основано [на АПИ Главреда](http://api.glvrd.ru/).
 
