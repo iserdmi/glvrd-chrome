@@ -267,7 +267,7 @@ $(function() {
   function get_glvrd_js_content(callback) {
     chrome.runtime.sendMessage({message: 'Give me last glvrd.js file'}, function(response) {
       callback(response.file_content);
-    });  
+    });
   }
 
   function get_tab_selection(callback) {
@@ -315,7 +315,11 @@ $(function() {
         set_last_text(selection);
       }
       get_glvrd_js_content(function(glvrd_js_content) {
-        eval.call(window, glvrd_js_content);
+        if (glvrd_js_content) {
+          eval.call(window, glvrd_js_content);
+        } else {
+          shit_happens('no_glvrd_js');
+        }        
         get_last_text(function(text) {
           global_editor.setValue(text);
           update_text_stats();

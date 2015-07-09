@@ -36,9 +36,6 @@ chrome.runtime.onMessage.addListener(function(data, sender, sendResponse) {
 });
 
 function get_last_glvrd_js() {
-  if (global_waiting_for_last_glvrd_js) {
-    clearInterval(global_waiting_for_last_glvrd_js);
-  }
   var xhr = new XMLHttpRequest();
   xhr.open("GET", "http://api.glvrd.ru/v1/glvrd.js", true);
   xhr.onreadystatechange = function() {
