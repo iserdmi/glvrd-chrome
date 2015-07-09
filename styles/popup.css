@@ -14,13 +14,14 @@ body {
   border-top: 1px solid #ddd;
   height: 90px;
   padding: 0 2.5em;
+  transition: height 0.2s;
+  -webkit-transition: height 0.2s;
+  overflow: hidden;
 }
 .text {
-  padding: 3em 3.5em;
   background: #fff;
-  max-height: 300px;
-  overflow: auto;
-  height: 100px;
+  overflow: hidden;
+  height: 191px;
   transition: height 0.2s;
   -webkit-transition: height 0.2s;
 }
@@ -34,15 +35,12 @@ body {
 }
 .text textarea {
   width: 100%;
-  min-height: 20em;
   outline: none;
+  height: 191px;
 }
 .text iframe { 
-  height: 100% !important;
-}
-.text .textarea_wrap {
-  transition: height 0.2s;
-  -webkit-transition: height 0.2s;
+  height: 191px;
+  padding: 0 !important;
 }
 #info .stats {
   color: #333;
@@ -125,7 +123,8 @@ a:hover {
   color: #888;
 }
 #info .rule .wrapper {
-  padding-top: 1.35em;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 #info .rule .title {
   font-weight: bold;

@@ -39,7 +39,7 @@ gulp.task 'copy_key_to_extension', ->
     .pipe gulp.dest 'extension'
 
 gulp.task 'create_extension_archive', ['copy_key_to_extension'], ->
-  gulp.src 'extension/*'
+  gulp.src 'extension/**/*'
     .pipe zip 'extension.zip'
     .pipe gulp.dest ''
 
@@ -47,7 +47,7 @@ gulp.task 'dist', ['create_extension_archive'], ->
   fs.unlinkSync 'extension/key.pem'
 
 gulp.task 'watch', ->
-  gulp.watch ['scripts/**', 'images/**', 'styles/**', 'scripts/**', 'views/**', 'manifest.json']
+  gulp.watch ['scripts/**', 'images/**', 'styles/**', 'vendors/**', 'views/**', 'manifest.json']
     .on 'change', (e) ->
       src = path.relative(__dirname, e.path)
       src_parts = src.split(path.sep)

@@ -1,6 +1,8 @@
 body {
-  padding: 0px !important;
+  padding: 3em 3.5em !important;
+  box-sizing: border-box;
   color: #000 !important;
+  min-height: 191px !important;
 }
 font {
   color: #000 !important;

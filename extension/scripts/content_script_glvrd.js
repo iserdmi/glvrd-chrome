@@ -1,10 +1,6 @@
 chrome.runtime.sendMessage({message: 'What text was in last time?'}, function(response) {
-  console.log(response.text);
-  console.log(response.text.replace(/<em[^>]*>/g, '').replace(/<\/em>/g, ''));
   localStorage.setItem("lastText", response.text.replace(/<em[^>]*>/g, '').replace(/<\/em>/g, ''));
 });
-
-console.log(234);
 
 $(function() {
   waiting_for_editor = setInterval(function() {

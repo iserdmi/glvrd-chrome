@@ -1,6 +1,7 @@
 $(function() {
   var
-    min_textarea_height = 100,
+    min_text_height = 191,
+    max_text_height = 400,
     global_editor,
     global_sentences = 0,
     global_words = 0,
@@ -9,11 +10,10 @@ $(function() {
     global_want_to_check = false,
     global_current_status = 'waiting',
     $text = $('.text'),
-    $textarea_wrap = $('#textarea_wrap'),
     $info = $('#info'),
     $body = $('body'),
     $head = $('head'),
-    $textarea = $textarea_wrap.find('#textarea'),
+    $textarea = $('#textarea'),
     $stats = $info.find('.stats'),
     $rule = $info.find('.rule'),
     $rule_title = $rule.find('.title'),
@@ -34,30 +34,33 @@ $(function() {
     $stats_stopwords_suffix = $stats.find('.stats-stopwords-suffix'),
     $send_to_glvrd = $stats.find('.send_to_glvrd'),
     $editor_error_css = $('<link>').attr('rel', 'stylesheet').attr('href', 'styles/editor_error.css'),
+    $iframe_css = $('<style>').appendTo($head),
     $glvrd_js,
     $editor_iframe,
     $editor_body,
     $editor_head;
 
-  function resize_textarea(animated) {
-    $editor_body.css({
-      'min-height': 0,
-      'overflow': 'hidden',
-    });
-    var 
+  function get_textarea_height() {
+    var
       scroll_height = $editor_body[0].scrollHeight,
-      body_height = $editor_body.height(),
-      new_height = Math.min(scroll_height, body_height);
-    if (min_textarea_height > new_height) {
-      new_height = min_textarea_height;
-    }
-    if (animated) {
-      $textarea_wrap.animate({height: new_height});
-      $text.animate({height: new_height});
+      body_height = $editor_body.height();
+    return Math.min(scroll_height, body_height);
+  }
+
+  function set_textarea_height(height) {
+    $iframe_css.html('.text iframe {height: '+height+'px !important;}');
+    $text.height(height);
+  }
+
+  function resize_textarea() {
+    var textarea_height = $editor_body.outerHeight();
+    if (textarea_height < min_text_height) {
+      set_textarea_height(min_text_height);
+    } else if (textarea_height > max_text_height) {
+      set_textarea_height(max_text_height);
     } else {
-      $textarea_wrap.height(new_height);
-      $text.height(new_height);
-    }    
+      set_textarea_height(textarea_height);
+    }
   }
 
   function set_text(text) {
@@ -136,13 +139,16 @@ $(function() {
 
   function update_text_stats() {
     var
-      text = get_clear_text(),
-      global_sentences = text.match(/(\.( |$))|([^\.\s]+$)/gm);
+      text = get_clear_text().replace(/(\r\n|\n|\r)/gm,"").trim(),
+    global_sentences = text.match(/[^\s](\.|…|\!|\?)(?!\w)(?!\.\.)/g);
     global_words = text.replace(/[А-Яа-яA-Za-z0-9-]+([^А-Яа-яA-Za-z0-9-]+)?/g, ".");
     global_chars = text.replace(/[^А-Яа-яA-Za-z0-9-\s.,()-]+/g, "");
     global_sentences = (global_sentences) ? global_sentences.length : 0;
     global_words = (global_words) ? global_words.length : 0;
     global_chars = (global_chars) ? global_chars.length : 0;
+    if (!/(\.|…|\!|\?)/g.test(text.slice(-1))) {
+      global_sentences++;
+    }
     $stats_sentences.text(global_sentences);
     $stats_sentences_suffix.text(get_word_for_num(global_sentences, 'предложений', 'предложение', 'предложения'));
     $stats_words.text(global_words);
@@ -192,6 +198,10 @@ $(function() {
   }
 
   function set_status(status) {
+    if (status !== 'rule') {
+      $rule.removeAttr('style');
+      $info.removeAttr('style');
+    }
     if (global_current_status === 'error') {
       if (status !== 'waiting') {
         return;
@@ -211,6 +221,17 @@ $(function() {
           }
         });
       }, 2000);
+    }
+    if (status === 'rule') {
+      var needed_height = $rule_title.outerHeight(true) + $rule_description.outerHeight(true) + 40;
+      console.log(needed_height);
+      if (needed_height > 90) {
+        $rule.css('height', needed_height + 'px');
+        $info.css('height', needed_height + 'px');
+      } else {
+        $rule.removeAttr('style');
+        $info.removeAttr('style');
+      }
     }
     global_current_status = status;
     $body
@@ -312,9 +333,11 @@ $(function() {
 
   global_editor.on('load', function() {
     $editor_iframe = $(this.composer.iframe);
+    window.sss = $editor_iframe;
     $editor_body = $(this.composer.element);
     $editor_head = $editor_iframe.contents().find('head');
-    $editor_body.focus();          
+    $editor_body.focus();
+
     get_tab_selection(function(selection) {
       if (selection) {
         set_last_text(selection);
@@ -355,7 +378,8 @@ $(function() {
         var
           $em = $(this),
           title = $em.data('title'),
-          description = $em.data('description');
+          description = $em.data('description'),
+          needed_height;
         $em.addClass('active');        
         $editor_body.find('em[data-title="' + title + '"]').not($em).addClass('also');
         $rule_title.html(title);
@@ -370,6 +394,6 @@ $(function() {
       });
     $send_to_glvrd.on('click', function(event) {
       set_last_text();
-    })
+    });
   });
 });

@@ -5866,8 +5866,8 @@ wysihtml5.quirks.cleanPastedHTML = (function() {
       }
 
       if (keyCode === wysihtml5.ENTER_KEY && !wysihtml5.browser.insertsLineBreaksOnReturn()) {
-        composer.commands.exec("insertLineBreak");
-        event.preventDefault();
+        // composer.commands.exec("insertLineBreak");
+        // event.preventDefault();
       }
     }
     

@@ -5,7 +5,7 @@ function log(variable) {
 }
 
 chrome.contextMenus.create({
-  "title": "Отправить в «Главред»",
+  "title": "Отправить в Главред",
   "contexts": ["selection"],
   "onclick": function(info) {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
