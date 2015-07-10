@@ -36,6 +36,6 @@ em.also {
   transition: background-color .25s, color .25s;
   -webkit-transition: background-color .25s, color .25s;
 }
-i, u {
+i, u, s {
   text-decoration: none;
 }

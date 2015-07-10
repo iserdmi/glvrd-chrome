@@ -67,9 +67,9 @@ $(function() {
   }
 
   function remove_em_under_cursor() {
-    save_cursor_position('u');
+    save_cursor_position('em_cursor_position');
     var 
-      $cursor_position = $editor_body.find('u'),
+      $cursor_position = $editor_body.find('.em_cursor_position'),
       $cursor_position_parent = $cursor_position.parent();
     if ($cursor_position_parent.is('em')) {
       $cursor_position_parent.replaceWith($cursor_position_parent.html());
@@ -80,23 +80,19 @@ $(function() {
   function set_text(text) {
     set_last_text(text);
     global_editor.setValue(text);
-    var $cursor_position = $editor_body.find('i');
-    if ($cursor_position.length) {
-      global_editor.composer.selection.selectNode($cursor_position.first()[0]);
-      $cursor_position.remove();
-    }
+    load_cursor_position();    
   }
 
-  function save_cursor_position(tag_name) {
-    var tag_name = tag_name || 'i';
-    $editor_body.find(tag_name).remove();
-    global_editor.composer.selection.insertNode($('<' + tag_name + '></' + tag_name + '>')[0]);
+  function save_cursor_position(class_name) {
+    var class_name = class_name || 'glvrd_cursor_position';
+    $editor_body.find('.' + class_name).remove();
+    global_editor.composer.selection.insertNode($('<i class="' + class_name + '"></i>')[0]);
   }
 
-  function load_cursor_position(tag_name) {
+  function load_cursor_position(class_name) {
     var 
-      tag_name = tag_name || 'i',
-      $cursor_position = $editor_body.find(tag_name);
+      class_name = class_name || 'glvrd_cursor_position',
+      $cursor_position = $editor_body.find('.' + class_name);
     if ($cursor_position.length) {
       global_editor.composer.selection.selectNode($cursor_position.first()[0]);
       $cursor_position.remove();
