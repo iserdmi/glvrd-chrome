@@ -36,7 +36,6 @@ em.also {
   transition: background-color .25s, color .25s;
   -webkit-transition: background-color .25s, color .25s;
 }
-i {
-  font-size: 0;
-  line-height: 0;
+i, u {
+  text-decoration: none;
 }

@@ -19,58 +19,64 @@ body {
   -webkit-transition: height 0.2s;
   overflow: hidden;
 }
-.text {
+#text {
   background: #fff;
   overflow: hidden;
   height: 191px;
+  transition: opacity 0.2s;
+  -webkit-transition: opacity 0.2s;
+  opacity: 1;
 }
-.text.animated {
-  transition: height 0.2s;
-  -webkit-transition: height 0.2s;
+#text.prepare {
+  opacity: 0;
 }
-.text,
-.text textarea {
+#text.animated {
+  transition: height 0.2s, opacity 0.2s;
+  -webkit-transition: height 0.2s, opacity 0.2s;
+}
+#text,
+#text textarea {
   font-family: "Helvetica Neue", Arial, sans-serif;
   font-size: 100%;
   line-height: 160%;
   border: 0px;
   resize: none;
 }
-.text textarea {
+#text textarea {
   width: 100%;
   outline: none;
   height: 191px;
 }
-.text iframe { 
+#text iframe { 
   height: 191px;
   padding: 0 !important;
 }
-#info .stats {
+#stats {
   color: #333;
   font-size: .8em;
   line-height: 1.4em;     
 }
-#info .stats .wrapper {
+#stats .wrapper {
   padding-top: 2.5em; 
 }
-#info .stats span.value {
+#stats span.value {
   font-weight: bold;
 }
-#info .stats .stats-score-div,
-#info .stats .stats-text-div,
-#info .stats .stats-result-div {
+#stats .score-wrapper,
+#stats .text-wrapper,
+#stats .result-wrapper {
   float: left;
 }
-#info .stats .stats-score-div {
+#stats .score-wrapper {
   width: 33%;
 }
-#info .stats .stats-text-div {
+#stats .text-wrapper {
   width: 26%;
 }
-#info .stats .stats-result-div {
+#stats .result-wrapper {
   width: 33%;
 }
-#info .stats .stats-score {
+#stats .score {
   display: block;
   float: left;
   height: 30px;
@@ -80,9 +86,9 @@ body {
   padding-top: 2px;
   margin-right: 8px;
 }
-#info .stats.processing .stats-score,
-#info .stats.processing .stats-stopwords,
-#info .stats.processing .stats-stopwords-suffix {
+#stats.processing .score,
+#stats.processing .stopwords,
+#stats.processing .stopwords-suffix {
   color: #999;
   border-color: #ccc;
 }
@@ -94,76 +100,79 @@ a {
 a:hover {
   opacity: .5;
 }
-#info .welcome {
+#welcome {
   color: #333;
   font-size: .8em;
   line-height: 1.4em;
   position: relative;
 }
-#info .welcome .wrapper {
+#welcome .wrapper {
   padding-top: 1.8em;
 }
-#info .welcome .copyright a {  
+#welcome .copyright a {  
   border-bottom-color: #ccc;
   color: #888;
 }
-#info .welcome .task {
+#welcome .task {
   float: left;
   width: 55%;
   margin: 0;
 }
-#info .welcome .copyright {
+#welcome .copyright {
   float: right;
   width: 41%;
   margin: 0;
   color: #888;
 }
-#info .rule .wrapper {
+#rule .wrapper {
   padding-top: 20px;
   padding-bottom: 20px;
 }
-#info .rule .title {
+#rule .title {
   font-weight: bold;
   font-size: 140%;
   margin: 0 0 0.2em;
 }
-#info .rule .description {
+#rule .description {
   font-size: 90%;
   line-height: 140%;
   margin: 0;
 }
-#info .error .wrapper {
+#error .wrapper {
   padding-top: 1.35em;
 }
-#info .error .title {
+#error .title {
   font-weight: bold;
   font-size: 140%;
   margin: 0 0 0.2em;
   color: #DA570F;
 }
-#info .error .description {
+#error .description {
   font-size: 90%;
   line-height: 140%;
   margin: 0;
 }
-#info .rule,
-#info .welcome,
-#info .stats,
-#info .error {
+#rule,
+#welcome,
+#stats,
+#error {
   overflow: hidden;
   opacity: 0;
   height: 0;
   transition: height 0s linear 0.2s, opacity 0.2s ease;
   -webkit-transition: height 0s linear 0.2s, opacity 0.2s ease;
 }
-body.status-rule #info .rule,
-body.status-welcome #info .welcome,
-body.status-error #info .error,
-body.status-stats #info .stats {
+body.status-rule #rule,
+body.status-welcome #welcome,
+body.status-error #error,
+body.status-stats #stats {
   height: 90px;
   opacity: 1;
   transition: height 0s linear 0.2s, opacity 0.2s linear 0.2s;
   -webkit-transition: height 0s linear 0.2s, opacity 0.2s linear 0.2s;
+}
+body.status-error #text {
+  opacity: 0.5;
 }
 body.status-waiting:before {
   content: '';

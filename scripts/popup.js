@@ -9,30 +9,33 @@ $(function() {
     global_waiting_for_user = false,
     global_want_to_check = false,
     global_current_status = 'waiting',
-    $text = $('.text'),
+    $text = $('#text'),
     $info = $('#info'),
     $body = $('body'),
     $head = $('head'),
     $textarea = $('#textarea'),
-    $stats = $info.find('.stats'),
-    $rule = $info.find('.rule'),
+    $stats = $info.find('#stats'),
+    $rule = $info.find('#rule'),
     $rule_title = $rule.find('.title'),
     $rule_description = $rule.find('.description'),
-    $welcome = $info.find('.welcome'),
-    $error = $info.find('.error'),
+    $welcome = $info.find('#welcome'),
+    $error = $info.find('#error'),
     $error_title = $error.find('.title'),
     $error_description = $error.find('.description'),
-    $stats_score = $stats.find('.stats-score'),
-    $stats_score_suffix = $stats.find('.stats-score-suffix'),
-    $stats_sentences = $stats.find('.stats-sentences'),
-    $stats_sentences_suffix = $stats.find('.stats-sentences-suffix'),
-    $stats_words = $stats.find('.stats-words'),
-    $stats_words_suffix = $stats.find('.stats-words-suffix'),
-    $stats_chars = $stats.find('.stats-chars'),
-    $stats_chars_suffix = $stats.find('.stats-chars-suffix'),
-    $stats_stopwords = $stats.find('.stats-stopwords'),
-    $stats_stopwords_suffix = $stats.find('.stats-stopwords-suffix'),
-    $send_to_glvrd = $stats.find('.send_to_glvrd'),
+    $stats_score_wrapper = $stats.find('.score-wrapper'),
+    $stats_score = $stats_score_wrapper.find('.score'),
+    $stats_score_suffix = $stats_score_wrapper.find('.score-suffix'),
+    $stats_text_wrapper = $stats.find('.text-wrapper'),
+    $stats_sentences = $stats_text_wrapper.find('.sentences'),
+    $stats_sentences_suffix = $stats_text_wrapper.find('.sentences-suffix'),
+    $stats_words = $stats_text_wrapper.find('.words'),
+    $stats_words_suffix = $stats_text_wrapper.find('.words-suffix'),
+    $stats_chars = $stats_text_wrapper.find('.chars'),
+    $stats_chars_suffix = $stats_text_wrapper.find('.chars-suffix'),
+    $stats_text_wrapper = $stats.find('.result-wrapper'),
+    $stats_stopwords = $stats_text_wrapper.find('.stopwords'),
+    $stats_stopwords_suffix = $stats_text_wrapper.find('.stopwords-suffix'),
+    $send_to_glvrd = $stats_text_wrapper.find('.send_to_glvrd'),
     $editor_error_css = $('<link>').attr('rel', 'stylesheet').attr('href', 'styles/editor_error.css'),
     $iframe_css = $('<style>').appendTo($head),
     $glvrd_js,
@@ -48,7 +51,7 @@ $(function() {
   }
 
   function set_textarea_height(height) {
-    $iframe_css.html('.text iframe {height: '+height+'px !important;}');
+    $iframe_css.html('#text iframe {height: '+height+'px !important;}');
     $text.height(height);
   }
 
@@ -63,6 +66,17 @@ $(function() {
     }
   }
 
+  function remove_em_under_cursor() {
+    save_cursor_position('u');
+    var 
+      $cursor_position = $editor_body.find('u'),
+      $cursor_position_parent = $cursor_position.parent();
+    if ($cursor_position_parent.is('em')) {
+      $cursor_position_parent.replaceWith($cursor_position_parent.html());
+      load_cursor_position();
+    }
+  }
+
   function set_text(text) {
     set_last_text(text);
     global_editor.setValue(text);
@@ -73,9 +87,23 @@ $(function() {
     }
   }
 
+  function save_cursor_position(tag_name) {
+    var tag_name = tag_name || 'i';
+    $editor_body.find(tag_name).remove();
+    global_editor.composer.selection.insertNode($('<' + tag_name + '></' + tag_name + '>')[0]);
+  }
+
+  function load_cursor_position(tag_name) {
+    var 
+      tag_name = tag_name || 'i',
+      $cursor_position = $editor_body.find(tag_name);
+    if ($cursor_position.length) {
+      global_editor.composer.selection.selectNode($cursor_position.first()[0]);
+      $cursor_position.remove();
+    }
+  }
+
   function get_raw_text() {
-    $editor_body.find('i').remove();
-    global_editor.composer.selection.insertNode($("<i></i>")[0]);
     return global_editor.getValue();
   }
 
@@ -89,6 +117,7 @@ $(function() {
 
   function get_text_for_glvrd(text) {
     if (text === undefined) {
+      save_cursor_position();
       text = get_raw_text();
     }
     return text
@@ -109,16 +138,15 @@ $(function() {
     set_status('error');
     switch (error_code) {
       case 'failed_request':
-        title = 'Расширение Главред не работает';
+        title = 'Расширение «Главред» не работает';
         description = message;
       default:
-        title = 'Расширение Главред не работает';
+        title = 'Расширение «Главред» не работает';
         description = 'Скоро проблема решится. А пока прошу вас использовать сайт <a href="http://glvrd.ru" target="_blank">Главреда</a>';
     }
     $error_title.html(title);
     $error_description.html(description);
   }
-  window.sh = shit_happens;
 
   function get_word_for_num(num, zero_word, one_word, two_word) {
     if ((num > 4) && (num < 21)) {
@@ -187,7 +215,10 @@ $(function() {
   }
 
   function set_last_text(text) {
-    text = text || get_raw_text();
+    if (!text) {
+      save_cursor_position();
+      text = get_raw_text();
+    }
     chrome.runtime.sendMessage({message: 'Set last text', text: text});
   }
 
@@ -239,7 +270,6 @@ $(function() {
       .addClass('status-' + status);
     return status;
   }
-  window.ss = set_status;
 
   function get_status() {
     return global_current_status;
@@ -254,7 +284,6 @@ $(function() {
     }
     return set_status('stats');
   }
-  window.us = update_status;
 
   function check_text() {
     $stats.addClass('processing');
@@ -333,7 +362,6 @@ $(function() {
 
   global_editor.on('load', function() {
     $editor_iframe = $(this.composer.iframe);
-    window.sss = $editor_iframe;
     $editor_body = $(this.composer.element);
     $editor_head = $editor_iframe.contents().find('head');
     $editor_body.focus();
@@ -353,6 +381,7 @@ $(function() {
           update_text_stats();
           setTimeout(function() {
             resize_textarea();
+            $text.removeClass('prepare');
             setTimeout(function() {
               $text.removeClass('animated');
             }, 500);
@@ -369,6 +398,7 @@ $(function() {
           set_last_text();
           user_activity();
           check_text();
+          remove_em_under_cursor();
           resize_textarea();
           update_text_stats();
           update_status();

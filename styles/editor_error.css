@@ -1,5 +1,5 @@
 *, body, font, em, em.active, em.also {
-  color: #999 !important;
+  color: #000 !important;
   background: none !important;
   transition: background-color .25s, color .25s;
   -webkit-transition: background-color .25s, color .25s;
