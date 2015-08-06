@@ -38,7 +38,6 @@ $(function() {
     $send_to_glvrd = $stats_text_wrapper.find('.send_to_glvrd'),
     $editor_error_css = $('<link>').attr('rel', 'stylesheet').attr('href', 'styles/editor_error.css'),
     $iframe_css = $('<style>').appendTo($head),
-    $glvrd_js,
     $editor_iframe,
     $editor_body,
     $editor_head;
@@ -317,12 +316,6 @@ $(function() {
     return true;
   }
 
-  function get_glvrd_js_content(callback) {
-    chrome.runtime.sendMessage({message: 'Give me last glvrd.js file'}, function(response) {
-      callback(response.file_content);
-    });
-  }
-
   function get_tab_selection(callback) {
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {'message': 'Give me selection'}, function(response) {
@@ -365,27 +358,20 @@ $(function() {
     get_tab_selection(function(selection) {
       if (selection) {
         set_last_text(selection);
-      }
-      get_glvrd_js_content(function(glvrd_js_content) {
-        if (glvrd_js_content) {
-          eval.call(window, glvrd_js_content);
-        } else {
-          shit_happens('no_glvrd_js');
-        }        
-        get_last_text(function(text) {
-          global_editor.setValue(text);
-          update_text_stats();
+      }     
+      get_last_text(function(text) {
+        global_editor.setValue(text);
+        update_text_stats();
+        setTimeout(function() {
+          resize_textarea();
+          $text.removeClass('prepare');
           setTimeout(function() {
-            resize_textarea();
-            $text.removeClass('prepare');
-            setTimeout(function() {
-              $text.removeClass('animated');
-            }, 500);
-          }, 100);          
-          check_text();
-          update_status();          
-        });
-      });        
+            $text.removeClass('animated');
+          }, 500);
+        }, 100);          
+        check_text();
+        update_status();          
+      });
     });
 
     $editor_body

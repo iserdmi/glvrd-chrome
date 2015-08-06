@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Главред",
   "description": "Помогает очистить текст от словесного мусора, проверяет на соответствие информационному стилю.",
-  "version": "1.3",
+  "version": "1.4",
   "icons": {
     "16": "images/icons/icon16.png",
     "48": "images/icons/icon48.png",
@@ -17,7 +17,7 @@
     "scripts": ["scripts/background.js"]
   },
   "content_scripts":[{
-    "matches": ["http://glvrd.ru/*"],
+    "matches": ["http://glvrd.ru/*", "https://glvrd.ru/*"],
     "js": ["vendors/jquery-2.1.4.min.js", "scripts/content_script_glvrd.js"],
     "run_at": "document_start"
   }, {
@@ -29,5 +29,5 @@
     "contextMenus",
     "<all_urls>"    
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://api.glvrd.ru; object-src 'self'"
 }

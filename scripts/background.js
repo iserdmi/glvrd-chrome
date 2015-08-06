@@ -27,31 +27,5 @@ chrome.runtime.onMessage.addListener(function(data, sender, sendResponse) {
     case 'Set last text':
       localStorage.setItem('last_text', data.text);
       break;
-    case 'Give me last glvrd.js file':
-      sendResponse({
-        file_content: localStorage.getItem('glvrd_js')
-      });
-      break;
   }
 });
-
-function get_last_glvrd_js() {
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", "http://api.glvrd.ru/v1/glvrd.js", true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == 4) {
-      var file_content = xhr.responseText;
-      if (file_content && (file_content.indexOf('ion()') !== -1)) {
-        localStorage.setItem('glvrd_js', file_content);
-      } else {
-        setTimeout(function() {
-          get_last_glvrd_js();
-        }, 1000);
-      }
-    }
-  }
-  xhr.send();
-}
-
-get_last_glvrd_js();
-setInterval(get_last_glvrd_js, 1000*60*60*24);
