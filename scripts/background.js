@@ -24,6 +24,29 @@ chrome.runtime.onMessage.addListener(function(data, sender, sendResponse) {
         text: localStorage.getItem('last_text')
       });
       break;
+    case 'Which state of locking?':
+      var
+        locking_state = localStorage.getItem('locking_state');
+      if (locking_state === undefined) {
+        locking_state = false;
+        localStorage.setItem('locking_state', locking_state);
+      }
+      sendResponse({
+        locking_state: locking_state
+      });
+      break;
+    case 'We want change locking state':
+      var
+        locking_state = localStorage.getItem('locking_state');
+      if (locking_state === undefined) {
+        locking_state = false;        
+      }
+      locking_state = !locking_state;
+      localStorage.setItem('locking_state', locking_state);
+      sendResponse({
+        locking_state: locking_state
+      });
+      break;
     case 'Set last text':
       localStorage.setItem('last_text', data.text);
       break;

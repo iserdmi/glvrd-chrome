@@ -38,6 +38,8 @@ $(function() {
     $send_to_glvrd = $stats_text_wrapper.find('.send_to_glvrd'),
     $editor_error_css = $('<link>').attr('rel', 'stylesheet').attr('href', 'styles/editor_error.css'),
     $iframe_css = $('<style>').appendTo($head),
+    $locking = $('#locking'),
+    locking_state = (localStorage.getItem('locking_state') === 'true' ? true : false),
     $editor_iframe,
     $editor_body,
     $editor_head;
@@ -117,7 +119,9 @@ $(function() {
     }
     return text
       .replace(/<em[^>]*>/g, '')
-      .replace(/<\/em>/g, '');;
+      .replace(/<\/em>/g, '');
+      // .replace(/<i[^>]*>/g, '')
+      // .replace(/<\/i>/g, '');
   }
 
   function normalize_textarea() {
@@ -198,7 +202,7 @@ $(function() {
         global_want_to_check = false;
         check_text();
       }
-    }, 1800); 
+    }, 1000); 
   }
 
   function is_text_ready_to_update() {
@@ -281,12 +285,18 @@ $(function() {
   }
 
   function check_text() {
+    var result_for_stats = false;
     $stats.addClass('processing');
     if (!is_text_ready_to_update()) {
       check_text_later();
       return false;
     }
-    text = get_text_for_glvrd();    
+    text = get_text_for_glvrd();
+    clear_text = get_clear_text();
+    console.log(text);
+    glvrd.proofread(clear_text, function(result) {
+      result_for_stats = result;
+    });
     glvrd.proofread(text, function(result) {
       if (result.status === 'error') {
         shit_happens(result.code, result.message)
@@ -296,27 +306,37 @@ $(function() {
         check_text_later();
         return false;
       }
-      $stats_score.text(result.score.replace('.', ','));
-      $stats_score_suffix.text(get_word_for_num(result.score, 'баллов', 'балл', 'балла'));
-      $stats_stopwords.text(result.fragments.length);
-      $stats_stopwords_suffix.text(get_word_for_num(result.fragments.length, 'стоп-слов', 'стоп-слово', 'стоп-слова'));
-      var index_increase = 0;
-      for (var i = 0; i < result.fragments.length; i++) {
-        var 
-          start_injection = '<em data-title="' + result.fragments[i].hint.name + '" data-description="' + result.fragments[i].hint.description + '">'
-          end_injection = '</em>';
-        text = insert_into_string(text, index_increase + result.fragments[i].start, start_injection);
-        index_increase += start_injection.length;
-        text = insert_into_string(text, index_increase + result.fragments[i].end, end_injection);
-        index_increase += end_injection.length;
-      }
-      $stats.removeClass('processing');
-      set_text(text);
+      var waiting_for_glvrd_requests = setInterval(function() {
+        if (result_for_stats === false) {
+          return false;
+        } else {
+          clearInterval(waiting_for_glvrd_requests);
+        }
+        $stats_score.text(result_for_stats.score.replace('.', ','));
+        $stats_score_suffix.text(get_word_for_num(result_for_stats.score, 'баллов', 'балл', 'балла'));
+        $stats_stopwords.text(result_for_stats.fragments.length);
+        $stats_stopwords_suffix.text(get_word_for_num(result_for_stats.fragments.length, 'стоп-слов', 'стоп-слово', 'стоп-слова'));
+        var index_increase = 0;
+        for (var i = 0; i < result.fragments.length; i++) {
+          var 
+            start_injection = '<em data-title="' + result.fragments[i].hint.name + '" data-description="' + result.fragments[i].hint.description + '">'
+            end_injection = '</em>';
+          text = insert_into_string(text, index_increase + result.fragments[i].start, start_injection);
+          index_increase += start_injection.length;
+          text = insert_into_string(text, index_increase + result.fragments[i].end, end_injection);
+          index_increase += end_injection.length;
+        }
+        $stats.removeClass('processing');
+        set_text(text);
+      }, 100);
     });
     return true;
   }
 
   function get_tab_selection(callback) {
+    if (locking_state) {
+      return callback(false);
+    }
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
       chrome.tabs.sendMessage(tabs[0].id, {'message': 'Give me selection'}, function(response) {
         if (response && response.text && response.text.length) {
@@ -327,6 +347,26 @@ $(function() {
       });
     });
   }
+
+  function set_locking_state(new_state) {
+    if (new_state === undefined) {
+      new_state = locking_state;
+    }
+    locking_state = new_state;
+    localStorage.setItem('locking_state', locking_state);
+    $locking.toggleClass('lock', locking_state);
+    $locking.toggleClass('unlock', !locking_state);
+  }
+
+  function toggle_locking_state() {
+    set_locking_state(!locking_state);
+  }
+
+  set_locking_state();
+  $locking.on('click', function(e) {
+    e.preventDefault();
+    toggle_locking_state();
+  });
 
   global_editor = new wysihtml5.Editor('textarea', {
     stylesheets: ['styles/editor.css'],

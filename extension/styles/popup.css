@@ -27,6 +27,69 @@ body {
   -webkit-transition: opacity 0.2s;
   opacity: 1;
 }
+#locking {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #888;
+  font-size: .8em;
+  line-height: 1.4em;
+  text-align: right;
+  border-bottom: none;
+  padding: 1.4em 3em 0em 0.2em;
+  width: 0;
+  text-align: right;
+  white-space: nowrap;
+  opacity: 1;
+  overflow: hidden;
+  transition: width 0ms linear 200ms;
+}
+#locking span {
+  display: none;
+  opacity: 0;
+  transition: opacity 200ms;
+  pointer-events: none;
+  text-align: right;
+  background: #fff;
+  padding: 2em;
+  margin: -2em;
+
+}
+#locking:hover {
+  width: 100%;
+  transition: none;
+  height: 33px;
+}
+#locking:hover span {
+  opacity: 1;
+  transition: opacity 200ms ease 200ms;
+}
+#locking.lock .when_lock {
+  display: block;
+}
+#locking.unlock .when_unlock {
+  display: block;
+}
+#locking .icon {
+  position: absolute;
+  top: 1.3em;
+  right: 1.5em;
+  width: 11px;
+  height: 14px;
+  opacity: 0.4;
+  transition: opacity 200ms;
+  background: url('/images/lock.png') top left no-repeat;
+  background-size: 22px 14px;
+}
+#locking.lock .icon {
+  background-position: top left;
+}
+#locking.unlock .icon {
+  background-position: top right;
+}
+#locking:hover .icon {
+  opacity: 1;
+}
 #text.prepare {
   opacity: 0;
 }
